@@ -27,15 +27,11 @@ public class MainCamera : MonoBehaviour
             float mouseY = Input.GetAxis("Mouse Y");    // down < 0, up > 0
             float mouseX = Input.GetAxis("Mouse X");    // left < 0, right > 0
 
-            Debug.Log("X: " + mouseX + "Y: " + mouseY);
-
             // 시점 거꾸로 뒤집히는 것 방지를 위해 Y축 회전 제한
             // 캐릭터 forward 벡터와 캐릭터-카메라 벡터가 이루는 각이 0-90도 사이어야 한다
             var YDot = Vector3.Dot(playerTransform.up, (transform.position - playerTransform.position).normalized);
 
             // Y축 회전
-            Debug.Log("mouseY" + mouseY);
-            Debug.Log("Dot" + YDot);
             bool rotationOutOfRange = (YDot < .1f && mouseY > 0) ||(YDot > 0.9f && mouseY < 0);
             if (!rotationOutOfRange)
             {
