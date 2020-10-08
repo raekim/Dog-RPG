@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : Character
 {
     public float moveSpeed = .1f;
+    public Attack[] playerAttacks;
 
     Animator animator;
     Rigidbody rb;
@@ -65,7 +66,7 @@ public class Player : MonoBehaviour
 
     IEnumerator Idle()
     {
-        Debug.Log("Idle");
+        //Debug.Log("Idle");
         stateChanged = false;
 
         while (!stateChanged)
@@ -91,7 +92,7 @@ public class Player : MonoBehaviour
 
     IEnumerator Run()
     {
-        Debug.Log("Run");
+        //Debug.Log("Run");
         animator.SetBool("Running", true);
         stateChanged = false;
 
@@ -117,14 +118,16 @@ public class Player : MonoBehaviour
 
     IEnumerator Attack()
     {
-        Debug.Log("Attack");
+        //Debug.Log("Attack");
         animator.Play("Attack");
         animator.SetBool("Attacking", true);
 
         bool attacking = true;
 
-        float attackLength = .7f;
         float delta = 0f;
+
+        playerAttacks[0].gameObject.SetActive(true);
+        playerAttacks[0].AttackStart();
 
         while (attacking)
         {
@@ -132,17 +135,23 @@ public class Player : MonoBehaviour
 
             delta += Time.deltaTime;
 
-            if (delta >= attackLength)
-            {
-                attacking = false;
-            }
+            playerAttacks[0].UpdateAttack(leftMouseClicked);  // 나중에 플레이어 컨트롤 인풋 클래스가 작성되면 그것을 넘긴다
 
-            // 시간 내에 마우스 클릭하면 공격 유지
-            if (leftMouseClicked && delta > .3f)
+            if (delta >= playerAttacks[0].attackLength)
             {
-                delta = 0f;
-            }  
+                if(playerAttacks[0].attacking)
+                {
+                    delta = 0f;
+                    playerAttacks[0].AttackStart();
+                }
+                else
+                {
+                    attacking = false;
+                }
+            }
         }
+
+        playerAttacks[0].gameObject.SetActive(false);
 
         if (GetWASDKeyDown())
         {
