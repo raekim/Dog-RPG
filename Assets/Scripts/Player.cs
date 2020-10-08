@@ -119,8 +119,32 @@ public class Player : MonoBehaviour
     {
         Debug.Log("Attack");
         animator.Play("Attack");
+        animator.SetBool("Attacking", true);
 
-        if(GetWASDKeyDown())
+        bool attacking = true;
+
+        float attackLength = .7f;
+        float delta = 0f;
+
+        while (attacking)
+        {
+            yield return null;
+
+            delta += Time.deltaTime;
+
+            if (delta >= attackLength)
+            {
+                attacking = false;
+            }
+
+            // 시간 내에 마우스 클릭하면 공격 유지
+            if (leftMouseClicked && delta > .3f)
+            {
+                delta = 0f;
+            }  
+        }
+
+        if (GetWASDKeyDown())
         {
             ChangeState(State.Run);
         }
@@ -129,6 +153,6 @@ public class Player : MonoBehaviour
             ChangeState(State.Idle);
         }
 
-        yield return null;
+        animator.SetBool("Attacking", false);
     } 
 }
