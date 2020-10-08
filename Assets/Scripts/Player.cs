@@ -4,30 +4,131 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public float moveSpeed = .1f;
+
+    Animator animator;
+    Rigidbody rb;
+
+    Vector3 dir;
+    bool leftMouseClicked;
+
+    enum State
+    {
+        Idle,
+        Run,
+        Attack
+    }
+
+    State currentState;
+    State beforeState;
+
+    bool stateChanged;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        rb = GetComponent<Rigidbody>();
+        animator = GetComponentInChildren<Animator>();
+
+        currentState = beforeState = State.Idle;
+
+        StartCoroutine(FSM());
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.W))
-        {
+        Control();
+    }
 
-        }
-        if (Input.GetKeyDown(KeyCode.A))
-        {
+    void Control()
+    {
+        leftMouseClicked = Input.GetKeyDown(KeyCode.Mouse0);
 
-        }
-        if (Input.GetKeyDown(KeyCode.S))
-        {
+        dir = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
+        dir.Normalize();    // 방향만 필요하기 때문에 벡터 정규화
+    }
 
-        }
-        if (Input.GetKeyDown(KeyCode.D))
-        {
+    void ChangeState(State nextState)
+    {
+        stateChanged = true;
+        beforeState = currentState;
+        currentState = nextState;
+    }
 
+    IEnumerator FSM()
+    {
+        while(true)
+        {
+            yield return StartCoroutine(currentState.ToString());
         }
     }
+
+    IEnumerator Idle()
+    {
+        Debug.Log("Idle");
+        stateChanged = false;
+
+        while (!stateChanged)
+        {
+            yield return null;
+
+            if (GetWASDKeyDown())
+            {
+                ChangeState(State.Run);
+            }
+
+            if (leftMouseClicked)
+            {
+                ChangeState(State.Attack);
+            }
+        }
+    }
+
+    bool GetWASDKeyDown()
+    {
+        return dir.magnitude > 0f;
+    }
+
+    IEnumerator Run()
+    {
+        Debug.Log("Run");
+        animator.SetBool("Running", true);
+        stateChanged = false;
+
+        while (!stateChanged)
+        {
+            yield return null;
+
+            rb.MovePosition(transform.position + dir * moveSpeed * Time.fixedDeltaTime);
+
+            if (!GetWASDKeyDown())
+            {
+                ChangeState(State.Idle);
+            }
+
+            if(leftMouseClicked)
+            {
+                ChangeState(State.Attack);
+            }
+        }
+
+        animator.SetBool("Running", false);
+    }
+
+    IEnumerator Attack()
+    {
+        Debug.Log("Attack");
+        animator.Play("Attack");
+
+        if(GetWASDKeyDown())
+        {
+            ChangeState(State.Run);
+        }
+        else
+        {
+            ChangeState(State.Idle);
+        }
+
+        yield return null;
+    } 
 }
