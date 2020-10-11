@@ -133,10 +133,12 @@ public class Player : Character
         {
             yield return null;
 
+            //attacking = playerAttacks[0].attacking;
+
             delta += Time.deltaTime;
-
-            playerAttacks[0].UpdateAttack(leftMouseClicked);  // 나중에 플레이어 컨트롤 인풋 클래스가 작성되면 그것을 넘긴다
-
+            
+            playerAttacks[0].UpdateAttack(leftMouseClicked);  // 나중에 싱글톤 플레이어 컨트롤 인풋 클래스가 작성되면 그것을 사용
+            
             if (delta >= playerAttacks[0].attackLength)
             {
                 if(playerAttacks[0].attacking)

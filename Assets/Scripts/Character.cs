@@ -10,6 +10,9 @@ public class Character : MonoBehaviour
     protected delegate void TakeDamageDelegate();
     protected TakeDamageDelegate takeDamageDelegate;
 
+    public delegate void DieDelegate();
+    public DieDelegate dieDelegate;
+
     protected void SetMaxHP(int amount)
     {
         maxHP = 0;
@@ -25,7 +28,12 @@ public class Character : MonoBehaviour
     public void TakeDamage(int amount)
     {
         currentHP -= amount;
-        if (currentHP < 0) currentHP = 0;
+        if (currentHP < 0)
+        {
+            currentHP = 0;
+            // 몬스터 사망
+            dieDelegate();
+        }
 
         takeDamageDelegate();
     }

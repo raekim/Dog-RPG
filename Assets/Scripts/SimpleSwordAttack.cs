@@ -33,11 +33,10 @@ public class SimpleSwordAttack : Attack
         // 시간 내에 마우스 클릭하면 공격 유지
         if (delta > .3f && leftMouseClicked)
         {
-            if(delta >= attackLength)
             attacking = true;
         }
-
-        // 공격 모션 막바지에 콜라이더 생성
+        
+        // 공격 모션 막바지에 콜라이더 생성 (공격마다 한 번만 생성)
         if(!colliderApeared && delta >= colliderApearTime)
         {
             attackCollider.enabled = true;
