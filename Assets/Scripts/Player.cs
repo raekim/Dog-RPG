@@ -7,8 +7,6 @@ public class Player : Character
     public float moveSpeed = .1f;
     public Attack[] playerAttacks;
 
-    
-
     Vector3 dir;
     bool leftMouseClicked;
 
@@ -20,8 +18,6 @@ public class Player : Character
     }
 
     State currentState;
-    State beforeState;
-
     bool stateChanged;
 
     private void Awake()
@@ -33,8 +29,7 @@ public class Player : Character
     // Start is called before the first frame update
     void Start()
     {
-        currentState = beforeState = State.Idle;
-
+        currentState = State.Idle;
         StartCoroutine(FSM());
     }
 
@@ -54,7 +49,6 @@ public class Player : Character
     void ChangeState(State nextState)
     {
         stateChanged = true;
-        beforeState = currentState;
         currentState = nextState;
     }
 

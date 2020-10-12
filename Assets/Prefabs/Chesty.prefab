@@ -822,6 +822,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2153bf786c8ad70468d944de01121fe9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isInvincible: 0
+  moveSpeed: 5
+  attackRange: 2
+  followRange: 8
 --- !u!135 &1005099865410602007
 SphereCollider:
   m_ObjectHideFlags: 0
