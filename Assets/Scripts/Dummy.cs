@@ -4,15 +4,13 @@ using UnityEngine;
 
 public class Dummy : Character
 {
-    Animator animator;
-
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
-        animator = GetComponentInChildren<Animator>();
-
         takeDamageDelegate += GetHit;
         dieDelegate += Die;
+
+        rb = GetComponent<Rigidbody>();
+        animator = GetComponent<Animator>();
     }
 
     public void GetHit()
@@ -33,9 +31,4 @@ public class Dummy : Character
 
         Destroy(gameObject);
     }
-
-    //private void OnTriggerEnter(Collider other)
-    //{
-    //    Debug.Log(other.gameObject.name);
-    //}
 }

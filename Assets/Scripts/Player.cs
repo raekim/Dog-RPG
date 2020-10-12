@@ -7,8 +7,7 @@ public class Player : Character
     public float moveSpeed = .1f;
     public Attack[] playerAttacks;
 
-    Animator animator;
-    Rigidbody rb;
+    
 
     Vector3 dir;
     bool leftMouseClicked;
@@ -25,12 +24,15 @@ public class Player : Character
 
     bool stateChanged;
 
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody>();
+        animator = GetComponent<Animator>();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
-        animator = GetComponentInChildren<Animator>();
-
         currentState = beforeState = State.Idle;
 
         StartCoroutine(FSM());

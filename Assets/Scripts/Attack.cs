@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Attack : MonoBehaviour
 {
+    [HideInInspector]
     public float attackLength;
     [HideInInspector]
     public bool attacking;

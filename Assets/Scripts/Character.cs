@@ -4,8 +4,13 @@ using UnityEngine;
 
 public class Character : MonoBehaviour
 {
+    public bool isInvincible;
+
     protected int maxHP;
     protected int currentHP;
+
+    protected Animator animator;
+    protected Rigidbody rb;
 
     protected delegate void TakeDamageDelegate();
     protected TakeDamageDelegate takeDamageDelegate;
@@ -32,9 +37,12 @@ public class Character : MonoBehaviour
         {
             currentHP = 0;
             // 몬스터 사망
-            dieDelegate();
+            if (!isInvincible)
+            {
+                if(dieDelegate != null) dieDelegate();
+            }
         }
 
-        takeDamageDelegate();
+        if(takeDamageDelegate != null) takeDamageDelegate();
     }
 }

@@ -13,6 +13,11 @@ public class SimpleSwordAttack : Attack
 
     public SphereCollider attackCollider;
 
+    private void Awake()
+    {
+        attackLength = .7f;
+    }
+
     public override void AttackStart()
     {
         attacking = false;
@@ -33,6 +38,7 @@ public class SimpleSwordAttack : Attack
         // 시간 내에 마우스 클릭하면 공격 유지
         if (delta > .3f && leftMouseClicked)
         {
+            Debug.Log("clicked");
             attacking = true;
         }
         
