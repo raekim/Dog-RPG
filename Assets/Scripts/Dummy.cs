@@ -6,15 +6,16 @@ public class Dummy : Character
 {
     private void Awake()
     {
-        takeDamageDelegate += GetHit;
+        getHitDelegate += GetHit;
         dieDelegate += Die;
 
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
     }
 
-    public void GetHit()
+    public void GetHit(int amount)
     {
+        AddToHP(amount);
         animator.SetTrigger("Hit");
         Debug.Log("Ouch");
     }

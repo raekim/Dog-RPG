@@ -52,8 +52,11 @@ public class SimpleSwordAttack : Attack
 
     private void OnTriggerEnter(Collider other)
     {
-        other.gameObject.GetComponent<Character>().TakeDamage(damage);
-        attackCollider.enabled = false;
+        Character character = other.gameObject.GetComponent<Character>();
+        if(character != null)
+        {
+            character.TakeDamage(-damage);
+            attackCollider.enabled = false;
+        }
     }
-
 }

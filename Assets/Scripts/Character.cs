@@ -6,14 +6,15 @@ public class Character : MonoBehaviour
 {
     public bool isInvincible;
 
+    protected bool isAlive;
     protected int maxHP;
     protected int currentHP;
 
     protected Animator animator;
     protected Rigidbody rb;
 
-    protected delegate void TakeDamageDelegate();
-    protected TakeDamageDelegate takeDamageDelegate;
+    protected delegate void GetHitDelegate(int damage);
+    protected GetHitDelegate getHitDelegate;
 
     public delegate void DieDelegate();
     public DieDelegate dieDelegate;
@@ -30,19 +31,20 @@ public class Character : MonoBehaviour
         currentHP = maxHP;
     }
 
+    protected void AddToHP(int amount)
+    {
+        currentHP += amount;
+        Mathf.Clamp(currentHP, 0, maxHP);
+    }
+
     public void TakeDamage(int amount)
     {
-        currentHP -= amount;
-        if (currentHP < 0)
-        {
-            currentHP = 0;
-            // 몬스터 사망
-            if (!isInvincible)
-            {
-                if(dieDelegate != null) dieDelegate();
-            }
-        }
+        if(getHitDelegate != null) getHitDelegate(amount);
 
-        if(takeDamageDelegate != null) takeDamageDelegate();
+        // 몬스터 사망
+        if (!isInvincible && currentHP == 0)
+        {
+            if (dieDelegate != null) dieDelegate();
+        }
     }
 }

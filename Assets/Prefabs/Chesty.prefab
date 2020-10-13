@@ -661,7 +661,8 @@ GameObject:
   m_Component:
   - component: {fileID: 543497264619431131}
   - component: {fileID: 543497264633394681}
-  m_Layer: 0
+  - component: {fileID: 2214394816806318466}
+  m_Layer: 9
   m_Name: ChestMesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -755,6 +756,19 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.33805645, y: 0.30108458, z: 0}
     m_Extent: {x: 0.7146654, y: 0.8540221, z: 0.56799185}
   m_DirtyAABB: 0
+--- !u!65 &2214394816806318466
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 543497264619731195}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.56, y: 1.9919168, z: 2.1363573}
+  m_Center: {x: 0.0000000302246, y: 0.021492302, z: 0.7120503}
 --- !u!1 &543497264619731197
 GameObject:
   m_ObjectHideFlags: 0
@@ -766,7 +780,6 @@ GameObject:
   - component: {fileID: 543497264619431133}
   - component: {fileID: 543497264629238585}
   - component: {fileID: 4834295676135369990}
-  - component: {fileID: 1005099865410602007}
   - component: {fileID: 5677029643327726449}
   m_Layer: 0
   m_Name: Chesty
@@ -826,19 +839,6 @@ MonoBehaviour:
   moveSpeed: 5
   attackRange: 2
   followRange: 8
---- !u!135 &1005099865410602007
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 543497264619731197}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 2
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &5677029643327726449
 Rigidbody:
   m_ObjectHideFlags: 0

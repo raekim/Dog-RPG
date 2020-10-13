@@ -9,13 +9,11 @@ public class Chesty : Character
     public float attackRange;
     public float followRange;
 
-    SphereCollider awakeCollider;
-
     enum State
     {
         Sleep,
         Battle,
-        Walking
+        Walking,
     }
 
     State currentState;
@@ -25,13 +23,51 @@ public class Chesty : Character
     {
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
-        awakeCollider = GetComponent<SphereCollider>();
+
+        getHitDelegate += GetHit;
+        dieDelegate += Die;
+        GetComponentInChildren<PlayerDetection>().playerDetectDelegate += OnPlayerDetect;
     }
 
     private void OnEnable()
     {
         currentState = State.Sleep;
         StartCoroutine(FSM());
+
+        // HP 초기화
+        SetMaxHP(30);
+        FillUpHPToMax();
+        isAlive = true;
+    }
+
+    public void GetHit(int amount)
+    {
+        if (!isAlive) return;
+
+        // Sleep 중에는 타격을 입지 않는다
+        if (currentState == State.Sleep) return;
+
+        Debug.Log("Chesty: Ouch!!");
+        AddToHP(amount);
+        animator.SetTrigger("Hit");
+    }
+
+    void Die()
+    {
+        if (!isAlive) return;   // 두 번 죽지 않는다
+
+        isAlive = false;
+        StopAllCoroutines();
+        StartCoroutine(DieCoroutine());
+    }
+
+    IEnumerator DieCoroutine()
+    {
+        Debug.Log("Chesty Dies");
+        animator.SetTrigger("Die");
+        yield return new WaitForSeconds(5f);
+
+        Destroy(gameObject);
     }
 
     void ChangeState(State nextState)
@@ -60,7 +96,6 @@ public class Chesty : Character
     IEnumerator Sleep()
     {
         stateChanged = false;
-        awakeCollider.enabled = true;
         while (!stateChanged)
         {
             yield return null;
@@ -74,27 +109,31 @@ public class Chesty : Character
         dir.y = 0f;
 
         float delta = 0f;
-        float walkingTime = Random.Range(1.5f, 3f);
+        float walkingTime = Random.Range(2f, 4f);
+        stateChanged = false;
 
-        while (delta < walkingTime)
+        while (!stateChanged && delta < walkingTime)
         {
-            Debug.Log(delta);
             yield return null;
 
             delta += Time.deltaTime;
-            transform.Translate(dir * moveSpeed * Time.deltaTime, Space.World);
+            transform.Translate(dir * moveSpeed * .5f * Time.deltaTime, Space.World);
         }
 
-        animator.SetTrigger("Sleep");
-        ChangeState(State.Sleep);
+        if(delta >= walkingTime)
+        {
+            animator.SetTrigger("Sleep");
+            ChangeState(State.Sleep);
+        }
     }
 
     IEnumerator Battle()
     {
-        Debug.Log("Battle");
         animator.SetBool("Battle", true);
         stateChanged = false;
         yield return new WaitForSeconds(1f);
+
+        float idlingDelta = 0f;
 
         while (!stateChanged)
         {
@@ -104,20 +143,26 @@ public class Chesty : Character
 
             if(dist < attackRange) // 플레이어가 공격 범위 내에 있으면 플레이어를 공격
             {
+                idlingDelta = 0f;
                 yield return StartCoroutine(Attack());
             }
             else if(dist < followRange) // 플레이어가 가까이 있으면 플레이어를 따라 감
             {
+                idlingDelta = 0f;
                 yield return StartCoroutine(FollowPlayer());
             }
             else
             {
                 // 잠시 대기하다가 전투모드 종료
-                yield return new WaitForSeconds(3f);
-                dist = Vector3.Distance(transform.position, playerTransform.position);
-                if (dist > followRange)
+                idlingDelta += Time.deltaTime;
+
+                if (idlingDelta > 3f)
                 {
-                    ChangeState(State.Walking);
+                    dist = Vector3.Distance(transform.position, playerTransform.position);
+                    if (dist > followRange)
+                    {
+                        ChangeState(State.Walking);
+                    }
                 }
             }
         }
@@ -127,7 +172,6 @@ public class Chesty : Character
 
     IEnumerator FollowPlayer()
     {
-        Debug.Log("following");
         animator.SetBool("Follow Player", true);
         bool following = true;
 
@@ -144,8 +188,6 @@ public class Chesty : Character
         }
 
         animator.SetBool("Follow Player", false);
-
-        Debug.Log("following over");
     }
 
     IEnumerator Attack()
@@ -164,18 +206,21 @@ public class Chesty : Character
         animator.SetBool("Attacking", false);
     }
 
-    // 버그 해결: OnTriggerEnter가 두 번 call되는 현상
-    // -> Sphere Collider의 contact point가 여러 개라서 일어날 수 있는 일
-    private void OnTriggerEnter(Collider other)
+    void OnPlayerDetect(GameObject playerObject)
     {
+        playerTransform = playerObject.transform;
+        Debug.Log(currentState.ToString());
+
         // Sleep 도중에 플레이어가 가까이 접근하면 깨어난다
-        if (other.gameObject.tag == "Player")
+        if(currentState == State.Sleep)
         {
-            playerTransform = other.gameObject.transform;
             ChangeState(State.Battle);
             animator.SetTrigger("Awake");
-
-            awakeCollider.enabled = false;
+        }
+        // 걸어가던 도중에 플레이어가 가까이 접근하면 공격모드로 돌입한다
+        else if (currentState == State.Walking)
+        {
+            ChangeState(State.Battle);
         }
     }
 }
