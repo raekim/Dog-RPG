@@ -59,6 +59,7 @@ public class Chesty : Character
         isAlive = false;
         StopAllCoroutines();
         StartCoroutine(DieCoroutine());
+        GetComponentInChildren<BoxCollider>().enabled = false;
     }
 
     IEnumerator DieCoroutine()
@@ -131,7 +132,6 @@ public class Chesty : Character
     {
         animator.SetBool("Battle", true);
         stateChanged = false;
-        yield return new WaitForSeconds(1f);
 
         float idlingDelta = 0f;
 
@@ -175,14 +175,14 @@ public class Chesty : Character
         animator.SetBool("Follow Player", true);
         bool following = true;
 
-        while(following)
+        while (following)
         {
             yield return null;
 
             // 플레이어를 따라다님
-            Vector3 dir = (playerTransform.position - transform.position).normalized;
-            transform.Translate(dir * moveSpeed * Time.deltaTime, Space.World);
-
+            transform.LookAt(playerTransform.position);
+            transform.Translate(transform.forward * moveSpeed * Time.deltaTime, Space.World);
+            
             float dist = Vector3.Distance(transform.position, playerTransform.position);
             following = dist < followRange && attackRange < dist;
         }
@@ -209,7 +209,6 @@ public class Chesty : Character
     void OnPlayerDetect(GameObject playerObject)
     {
         playerTransform = playerObject.transform;
-        Debug.Log(currentState.ToString());
 
         // Sleep 도중에 플레이어가 가까이 접근하면 깨어난다
         if(currentState == State.Sleep)

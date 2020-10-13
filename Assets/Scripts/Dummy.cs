@@ -17,7 +17,7 @@ public class Dummy : Character
     {
         AddToHP(amount);
         animator.SetTrigger("Hit");
-        Debug.Log("Ouch");
+        Debug.Log("Dummy: Ouch!");
     }
 
     void Die()

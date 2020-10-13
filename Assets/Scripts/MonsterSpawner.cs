@@ -6,6 +6,7 @@ public class MonsterSpawner : MonoBehaviour
 {
     public GameObject monsterPrefab;
     public int maxMonsterCount;
+    public float spawnRadius;
 
     [HideInInspector]
     public bool spawnerRunning;
@@ -57,7 +58,7 @@ public class MonsterSpawner : MonoBehaviour
         // count 마리의 몬스터들을 spawnDelaySeconds 초 마다 스폰한다
         for (int i=0; i<count; ++i)
         {
-            Vector3 spawnPosition = transform.position + Random.insideUnitSphere * 10f;
+            Vector3 spawnPosition = transform.position + Random.insideUnitSphere * spawnRadius;
             spawnPosition.y = 0f;
             GameObject obj = Instantiate(monsterPrefab, spawnPosition, Quaternion.identity);
 
