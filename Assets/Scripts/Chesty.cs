@@ -19,14 +19,22 @@ public class Chesty : Character
     State currentState;
     bool stateChanged;
 
-    private void Awake()
+    new private void Awake()
     {
+        base.Awake();
+
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
 
         getHitDelegate += GetHit;
         dieDelegate += Die;
         GetComponentInChildren<PlayerDetection>().playerDetectDelegate += OnPlayerDetect;
+    }
+
+    private void Start()
+    {
+        HPBar.Init("체스티", 30);
+        HPBar.gameObject.SetActive(true);
     }
 
     private void OnEnable()

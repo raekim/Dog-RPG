@@ -20,7 +20,7 @@ public class Player : Character
     State currentState;
     bool stateChanged;
 
-    private void Awake()
+    new private void Awake()
     {
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();

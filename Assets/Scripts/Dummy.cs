@@ -4,13 +4,20 @@ using UnityEngine;
 
 public class Dummy : Character
 {
-    private void Awake()
+    new private void Awake()
     {
+        base.Awake();
+
         getHitDelegate += GetHit;
         dieDelegate += Die;
 
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
+    }
+
+    void Start()
+    {
+        HPBar.Init("연습 표적", 0);
     }
 
     public void GetHit(int amount)

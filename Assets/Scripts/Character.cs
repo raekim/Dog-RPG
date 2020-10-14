@@ -16,8 +16,23 @@ public class Character : MonoBehaviour
     protected delegate void GetHitDelegate(int damage);
     protected GetHitDelegate getHitDelegate;
 
+    public GameObject HPBarPrefab;
+    protected HealthBar HPBar;
+
     public delegate void DieDelegate();
     public DieDelegate dieDelegate;
+
+    protected void Awake()
+    {
+        Transform healthBarPosition = transform.Find("Health Bar Position").transform;
+
+        if(healthBarPosition != null)
+        {
+            Debug.Log(GameObject.Find("Canvas"));
+            HPBar = Instantiate(HPBarPrefab, GameObject.Find("Canvas").transform).GetComponent<HealthBar>();
+            HPBar.SetHealthBarPositionTransform(healthBarPosition);
+        }
+    }
 
     protected void SetMaxHP(int amount)
     {
