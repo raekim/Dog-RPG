@@ -28,7 +28,6 @@ public class Character : MonoBehaviour
 
         if(healthBarPosition != null)
         {
-            Debug.Log(GameObject.Find("Canvas"));
             HPBar = Instantiate(HPBarPrefab, GameObject.Find("Canvas").transform).GetComponent<HealthBar>();
             HPBar.SetHealthBarPositionTransform(healthBarPosition);
         }
@@ -44,6 +43,7 @@ public class Character : MonoBehaviour
     protected void FillUpHPToMax()
     {
         currentHP = maxHP;
+        HPChanged();
     }
 
     protected void AddToHP(int amount)
@@ -52,9 +52,21 @@ public class Character : MonoBehaviour
         Mathf.Clamp(currentHP, 0, maxHP);
     }
 
+    void HPChanged()
+    {
+        if(HPBar != null)
+        {
+            HPBar.HealthDisplay((float)currentHP / maxHP);
+        }
+    }
+
     public void TakeDamage(int amount)
     {
-        if(getHitDelegate != null) getHitDelegate(amount);
+        if (getHitDelegate != null)
+        {
+            getHitDelegate(amount);
+            HPChanged();
+        }
 
         // 몬스터 사망
         if (!isInvincible && currentHP == 0)

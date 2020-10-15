@@ -76,7 +76,9 @@ public class Chesty : Character
         animator.SetTrigger("Die");
         yield return new WaitForSeconds(5f);
 
-        Destroy(gameObject);
+        //Destroy(gameObject);
+        gameObject.SetActive(false);
+        HPBar.gameObject.SetActive(false);
     }
 
     void ChangeState(State nextState)

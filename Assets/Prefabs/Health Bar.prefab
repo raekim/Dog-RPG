@@ -360,7 +360,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89136b924657c7f49afb8e1ae0cc5617, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  transparencyConstant: 0
   transparency: 0.7
 --- !u!1 &1246481684148003166
 GameObject:

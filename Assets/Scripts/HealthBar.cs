@@ -55,7 +55,6 @@ public class HealthBar : MonoBehaviour
         transform.position = pos;
 
         float dist = Vector3.Distance(Camera.main.transform.position, healthBarPositionTransform.position);
-        Debug.Log(dist);
         if (dist <= 5f) dist = 0f;
         ChangeTransparency((transparencyConstant - dist) / transparencyConstant);
     }
