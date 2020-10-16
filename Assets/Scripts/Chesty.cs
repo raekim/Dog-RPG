@@ -58,6 +58,8 @@ public class Chesty : Character
         Debug.Log("Chesty: Ouch!!");
         AddToHP(amount);
         animator.SetTrigger("Hit");
+
+        DamageSkinManager.Instance.DisplayDamage(-amount, transform.position + Vector3.up * 2f);
     }
 
     void Die()
