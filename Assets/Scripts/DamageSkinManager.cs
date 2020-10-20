@@ -6,6 +6,7 @@ using System;
 
 public class DamageSkinManager : MonoBehaviour
 {
+    public string damageUICanvasName;
     public Text textStyle;
     public int damageTextCount; // 큐에 존재할 테미지 텍스트 갯수
     Queue<DamageText> damageTextQ;
@@ -40,7 +41,7 @@ public class DamageSkinManager : MonoBehaviour
 
         // 모든 데미지 텍스트 오브젝트들의 부모
         GameObject textParent = new GameObject("Damage Texts");
-        textParent.transform.parent = GameObject.Find("Canvas").transform;
+        textParent.transform.parent = GameObject.Find(damageUICanvasName).transform;
         textParent.transform.position = Vector3.zero;
 
         // 데미지 텍스트들 초기화
