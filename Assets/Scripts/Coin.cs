@@ -19,7 +19,11 @@ public class Coin : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
+        // 코인을 먹는다
         if(Vector3.Distance(other.gameObject.transform.position, transform.position) < 1f)
+        {
             Destroy(gameObject);
+            CoinPickManager.Instance.CoinPick(transform.position);
+        }
     }
 }
