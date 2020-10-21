@@ -76,6 +76,10 @@ public class Chesty : Character
     {
         Debug.Log("Chesty Dies");
         animator.SetTrigger("Die");
+
+        // Drop Gold
+        GoldManager.Instance.SpawnGold(3, transform.position);
+
         yield return new WaitForSeconds(5f);
 
         //Destroy(gameObject);
