@@ -26,7 +26,7 @@ public class Character : MonoBehaviour
     {
         Transform healthBarPosition = transform.Find("Health Bar Position").transform;
 
-        if(healthBarPosition != null)
+        if (healthBarPosition != null)
         {
             HPBar = Instantiate(HPBarPrefab, GameObject.Find("Canvas").transform).GetComponent<HealthBar>();
             HPBar.SetHealthBarPositionTransform(healthBarPosition);

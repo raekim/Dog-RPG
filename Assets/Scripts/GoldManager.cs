@@ -58,16 +58,20 @@ public class GoldManager : MonoBehaviour
         Vector3 vel = Random.insideUnitSphere*2f;
         vel.y = Random.Range(5f, 8f);
 
-        while(coinTrans.position.y > 0f)
+        while(coinTrans != null && coinTrans.position.y > 0f)
         {
-            yield return null;
-
             coinTrans.Translate(vel * Time.deltaTime);
             vel.y -= 12f * Time.deltaTime;
+
+            yield return null;
         }
 
-        var pos = coinTrans.position;
-        pos.y = 0f;
-        coinTrans.position = pos;
+        // 코인이 중간에 먹힐 수도 있으므로 null 체크
+        if(coinTrans != null)
+        {
+            var pos = coinTrans.position;
+            pos.y = 0f;
+            coinTrans.position = pos;
+        }
     }
 }

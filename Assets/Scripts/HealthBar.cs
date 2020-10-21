@@ -23,6 +23,9 @@ public class HealthBar : MonoBehaviour
     public void SetHealthBarPositionTransform(Transform trans)
     {
         healthBarPositionTransform = trans;
+
+        var pos = Camera.main.WorldToScreenPoint(healthBarPositionTransform.position);
+        transform.position = pos;
     }
 
     public void HealthDisplay(float ratio)
