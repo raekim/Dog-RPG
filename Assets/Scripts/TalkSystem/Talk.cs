@@ -4,22 +4,27 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class TalkBubble : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class Talk : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
-    Image bubbleImage;
-
+    public GameObject talkBubble;
+    public GameObject talkBoard;
     public Transform bubbleTransform;
+
+    Image bubbleImage;
     float offsetY;
+
+    bool talkingOn;
 
     private void Awake()
     {
-        bubbleImage = GetComponent<Image>();
+        bubbleImage = talkBubble.GetComponent<Image>();
     }
 
     // Start is called before the first frame update
     void Start()
     {
         offsetY = 3f;
+        talkingOn = false;
     }
 
     // Update is called once per frame
@@ -37,14 +42,37 @@ public class TalkBubble : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        bubbleImage.color = new Color(.7f, .3f, .3f);
-        transform.localScale = Vector3.one * 1.4f;
+        if(!talkingOn)
+        {
+            bubbleImage.color = new Color32(0xE3, 0x30, 0x30, 0xFF);
+            transform.localScale = Vector3.one * 1.4f;
+        }
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        bubbleImage.color = Color.white;
-        transform.localScale = Vector3.one;
+        if(!talkingOn)
+        {
+            bubbleImage.color = Color.white;
+            transform.localScale = Vector3.one;
+        }
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if(!talkingOn)
+        {
+            talkBubble.SetActive(false);
+            talkBoard.SetActive(true);
+            talkingOn = true;
+        }
+    }
+
+    public void TalkFinished()
+    {
+        talkBubble.SetActive(true);
+        talkBoard.SetActive(false);
+        talkingOn = false;
     }
 
     //void ChangeTransparency(float amount)
