@@ -1,12 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-
-public class TalkBubble : MonoBehaviour
+public class TalkBubble : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
+    Image bubbleImage;
+
     public Transform bubbleTransform;
     float offsetY;
+
+    private void Awake()
+    {
+        bubbleImage = GetComponent<Image>();
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -27,6 +35,18 @@ public class TalkBubble : MonoBehaviour
         //ChangeTransparency((transparencyConstant - dist) / transparencyConstant);
     }
 
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        bubbleImage.color = new Color(.7f, .3f, .3f);
+        transform.localScale = Vector3.one * 1.4f;
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        bubbleImage.color = Color.white;
+        transform.localScale = Vector3.one;
+    }
+
     //void ChangeTransparency(float amount)
     //{
     //    transparency = amount;
@@ -39,4 +59,6 @@ public class TalkBubble : MonoBehaviour
     //        txt.color = new Color(txt.color.r, txt.color.g, txt.color.b, transparency);
     //    }
     //}
+
+
 }
