@@ -10,8 +10,7 @@ public class WordDisplay : MonoBehaviour
     public string words;
     public bool loop;
 
-    // Start is called before the first frame update
-    void Start()
+    private void OnEnable()
     {
         TMP.text = "";
         StartCoroutine(display());
@@ -30,7 +29,10 @@ public class WordDisplay : MonoBehaviour
             foreach (char c in words)
             {
                 TMP.text += c;
+                Debug.Log("dot");
                 yield return new WaitForSeconds(speed);
+
+                
             }
             yield return null;
         }

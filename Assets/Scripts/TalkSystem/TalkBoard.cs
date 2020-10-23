@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
+
 public class TalkBoard : MonoBehaviour, IPointerClickHandler
 {
     public Talk myTalk;
@@ -59,6 +60,7 @@ public class TalkBoard : MonoBehaviour, IPointerClickHandler
             {
                 // 대화 종료
                 myTalk.TalkFinished();
+                return;
             }
 
             // 다음 대화로 넘어가기
