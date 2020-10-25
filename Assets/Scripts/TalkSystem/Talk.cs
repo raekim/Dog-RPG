@@ -56,14 +56,16 @@ public class Talk : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
             clickable = true;
         }
         ChangeTransparency((transparencyConstant - dist) / transparencyConstant);
-    }
+    }   
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (!talkingOn && clickable)
+        if (!talkingOn)//if (!talkingOn && clickable)
         {
             bubbleImage.color = new Color32(0xE3, 0x30, 0x30, 0xFF);
             transform.localScale = Vector3.one * 1.4f;
+
+            ControlManager.Instance.isMouseOverUI = true;
         }
     }
 
@@ -73,6 +75,8 @@ public class Talk : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
         {
             bubbleImage.color = Color.white;
             transform.localScale = Vector3.one;
+
+            ControlManager.Instance.isMouseOverUI = false;
         }
     }
 
@@ -80,17 +84,23 @@ public class Talk : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
     {
         if(!talkingOn && clickable)
         {
+            // 대화 시작
             talkBubble.SetActive(false);
             talkBoard.SetActive(true);
             talkingOn = true;
+
+            ControlManager.Instance.isInteractingWithUI = true;
         }
     }
 
     public void TalkFinished()
     {
+        // 대화 끝
         talkBubble.SetActive(true);
         talkBoard.SetActive(false);
         talkingOn = false;
+
+        ControlManager.Instance.isInteractingWithUI = false;
     }
 
     void ChangeTransparency(float amount)

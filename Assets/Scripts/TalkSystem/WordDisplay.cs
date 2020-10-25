@@ -29,7 +29,6 @@ public class WordDisplay : MonoBehaviour
             foreach (char c in words)
             {
                 TMP.text += c;
-                Debug.Log("dot");
                 yield return new WaitForSeconds(speed);
 
                 

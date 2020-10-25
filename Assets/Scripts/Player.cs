@@ -8,7 +8,6 @@ public class Player : Character
     public Attack[] playerAttacks;
 
     Vector3 dir;
-    bool leftMouseClicked;
 
     enum State
     {
@@ -31,19 +30,6 @@ public class Player : Character
     {
         currentState = State.Idle;
         StartCoroutine(FSM());
-    }
-
-    void Update()
-    {
-        Control();
-    }
-
-    void Control()
-    {
-        leftMouseClicked = Input.GetKeyDown(KeyCode.Mouse0);
-
-        dir = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
-        dir.Normalize();    // 방향만 필요하기 때문에 벡터 정규화
     }
 
     void ChangeState(State nextState)
@@ -69,21 +55,16 @@ public class Player : Character
         {
             yield return null;
 
-            if (GetWASDKeyDown())
+            if (ControlManager.Instance.GetPlayerMoveKeyDown(out dir))
             {
                 ChangeState(State.Run);
             }
 
-            if (leftMouseClicked)
+            if (ControlManager.Instance.GetPlayerAttackButtonDown())
             {
                 ChangeState(State.Attack);
             }
         }
-    }
-
-    bool GetWASDKeyDown()
-    {
-        return dir.magnitude > 0f;
     }
 
     IEnumerator Run()
@@ -98,12 +79,12 @@ public class Player : Character
 
             rb.MovePosition(transform.position + dir * moveSpeed * Time.fixedDeltaTime);
 
-            if (!GetWASDKeyDown())
+            if (!ControlManager.Instance.GetPlayerMoveKeyDown(out dir))
             {
                 ChangeState(State.Idle);
             }
 
-            if(leftMouseClicked)
+            if(ControlManager.Instance.GetPlayerAttackButtonDown())
             {
                 ChangeState(State.Attack);
             }
@@ -133,7 +114,7 @@ public class Player : Character
 
             delta += Time.deltaTime;
             
-            playerAttacks[0].UpdateAttack(leftMouseClicked);  // 나중에 싱글톤 플레이어 컨트롤 인풋 클래스가 작성되면 그것을 사용
+            playerAttacks[0].UpdateAttack(ControlManager.Instance.GetPlayerAttackButtonDown());  // 나중에 싱글톤 플레이어 컨트롤 인풋 클래스가 작성되면 그것을 사용
             
             if (delta >= playerAttacks[0].attackLength)
             {
@@ -151,7 +132,7 @@ public class Player : Character
 
         playerAttacks[0].gameObject.SetActive(false);
 
-        if (GetWASDKeyDown())
+        if (ControlManager.Instance.GetPlayerMoveKeyDown(out dir))
         {
             ChangeState(State.Run);
         }
