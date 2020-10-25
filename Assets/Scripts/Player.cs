@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Player : Character
 {
+    public Transform modelTransform;
     public float moveSpeed = .1f;
     public Attack[] playerAttacks;
 
@@ -22,7 +23,7 @@ public class Player : Character
     new private void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        animator = GetComponent<Animator>();
+        animator = GetComponentInChildren<Animator>();
     }
 
     // Start is called before the first frame update
@@ -44,6 +45,17 @@ public class Player : Character
         {
             yield return StartCoroutine(currentState.ToString());
         }
+    }
+
+    //bool rotating;
+    //IEnumerator RotateTowards()
+    //{
+    //
+    //}
+
+    void RotateModelTowardsDir(float t)
+    {
+        modelTransform.LookAt(modelTransform.position + dir);
     }
 
     IEnumerator Idle()
@@ -72,13 +84,17 @@ public class Player : Character
         //Debug.Log("Run");
         animator.SetBool("Running", true);
         stateChanged = false;
+        float cnt = 0f;
 
         while (!stateChanged)
         {
             yield return null;
 
-            rb.MovePosition(transform.position + dir * moveSpeed * Time.fixedDeltaTime);
+            // 달리는 방향을 바라본다
+            RotateModelTowardsDir(cnt);
+            cnt += Time.deltaTime;
 
+            rb.MovePosition(transform.position + dir * moveSpeed * Time.fixedDeltaTime);
             if (!ControlManager.Instance.GetPlayerMoveKeyDown(out dir))
             {
                 ChangeState(State.Idle);
