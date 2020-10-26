@@ -9,6 +9,7 @@ public class Player : Character
     public Attack[] playerAttacks;
 
     public PlayerHealthBar HPBar;
+    public int maxHP;
 
     Vector3 dir;
 
@@ -38,7 +39,7 @@ public class Player : Character
         currentState = State.Idle;
 
         // 캐릭터 체력 초기화
-        SetMaxHP(150);
+        SetMaxHP(maxHP);
         FillUpHPToMax();
         isAlive = true;
 
@@ -104,7 +105,7 @@ public class Player : Character
     {
         // 플레이어 피격 시 잠시 아무것도 못 한다
         Debug.Log("Stunned");
-        yield return new WaitForSeconds(.8f);
+        yield return new WaitForSeconds(.5f);
         ChangeState(State.Idle);
     }
 

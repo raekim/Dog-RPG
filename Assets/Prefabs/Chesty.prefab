@@ -830,6 +830,7 @@ MonoBehaviour:
   moveSpeed: 5
   attackRange: 2
   followRange: 8
+  attackStrength: 5
 --- !u!54 &5677029643327726449
 Rigidbody:
   m_ObjectHideFlags: 0

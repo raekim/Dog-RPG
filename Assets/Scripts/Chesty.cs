@@ -8,6 +8,9 @@ public class Chesty : Monster
     public float moveSpeed;
     public float attackRange;
     public float followRange;
+    public int attackStrength;
+
+    Character playerCharacter;
 
     enum State
     {
@@ -95,11 +98,11 @@ public class Chesty : Monster
 
     void OnDrawGizmos()
     {
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(transform.position, followRange);
-
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, attackRange);
+        //Gizmos.color = Color.blue;
+        //Gizmos.DrawWireSphere(transform.position, followRange);
+        //
+        //Gizmos.color = Color.red;
+        //Gizmos.DrawWireSphere(transform.position, attackRange);
     }
 
     IEnumerator FSM()
@@ -236,6 +239,20 @@ public class Chesty : Monster
         else if (currentState == State.Walking)
         {
             ChangeState(State.Battle);
+        }
+    }
+
+    public void ChestyAttack()
+    {
+        Debug.Log(Vector3.Distance(playerTransform.position, transform.position));
+
+        if(Vector3.Distance(playerTransform.position, transform.position) < 2.1f)
+        {
+            if(playerCharacter == null)
+            {
+                playerCharacter = playerTransform.gameObject.GetComponentInParent<Character>();
+            }
+            playerCharacter.TakeDamage(-attackStrength);
         }
     }
 }
