@@ -289,7 +289,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1855d43060504846bd711b256b8b2cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isInvincible: 0
+  isInvincible: 1
   HPBarPrefab: {fileID: 1246481683815810288, guid: ba9cc51436c16f5488c6e9242f3ddc3a,
     type: 3}
 --- !u!1 &8244971823800370343
