@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Dummy : Character
+public class Dummy : Monster
 {
     new private void Awake()
     {

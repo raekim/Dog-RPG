@@ -16,22 +16,8 @@ public class Character : MonoBehaviour
     protected delegate void GetHitDelegate(int damage);
     protected GetHitDelegate getHitDelegate;
 
-    public GameObject HPBarPrefab;
-    protected HealthBar HPBar;
-
     public delegate void DieDelegate();
     public DieDelegate dieDelegate;
-
-    protected void Awake()
-    {
-        Transform healthBarPosition = transform.Find("Health Bar Position").transform;
-
-        if (healthBarPosition != null)
-        {
-            HPBar = Instantiate(HPBarPrefab, GameObject.Find("Canvas").transform).GetComponent<HealthBar>();
-            HPBar.SetHealthBarPositionTransform(healthBarPosition);
-        }
-    }
 
     protected void SetMaxHP(int amount)
     {
@@ -49,29 +35,14 @@ public class Character : MonoBehaviour
     protected void AddToHP(int amount)
     {
         currentHP += amount;
-        Mathf.Clamp(currentHP, 0, maxHP);
+        currentHP = Mathf.Clamp(currentHP, 0, maxHP);
     }
 
-    void HPChanged()
+    virtual protected void HPChanged()
     {
-        if(HPBar != null)
-        {
-            HPBar.HealthDisplay((float)currentHP / maxHP);
-        }
     }
 
-    public void TakeDamage(int amount)
+    virtual public void TakeDamage(int amount)
     {
-        if (getHitDelegate != null)
-        {
-            getHitDelegate(amount);
-            HPChanged();
-        }
-
-        // 몬스터 사망
-        if (!isInvincible && currentHP == 0)
-        {
-            if (dieDelegate != null) dieDelegate();
-        }
     }
 }

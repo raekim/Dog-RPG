@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Chesty : Character
+public class Chesty : Monster
 {
     Transform playerTransform;
     public float moveSpeed;
@@ -48,7 +48,7 @@ public class Chesty : Character
         isAlive = true;
     }
 
-    public void GetHit(int amount)
+    void GetHit(int amount)
     {
         if (!isAlive) return;
 

@@ -8,33 +8,113 @@ public class Player : Character
     public float moveSpeed = .1f;
     public Attack[] playerAttacks;
 
+    public PlayerHealthBar HPBar;
+
     Vector3 dir;
 
     enum State
     {
         Idle,
         Run,
-        Attack
+        Attack,
+        Stunned
     }
 
     State currentState;
     bool stateChanged;
 
-    new private void Awake()
+    void Awake()
     {
         rb = GetComponent<Rigidbody>();
         animator = GetComponentInChildren<Animator>();
+
+        getHitDelegate += GetHit;
+        dieDelegate += Die;
     }
 
     // Start is called before the first frame update
     void Start()
     {
         currentState = State.Idle;
+
+        // 캐릭터 체력 초기화
+        SetMaxHP(150);
+        FillUpHPToMax();
+        isAlive = true;
+
         StartCoroutine(FSM());
+    }
+
+    override protected void HPChanged()
+    {
+        if (HPBar != null)
+        {
+            HPBar.HealthDisplay((float)currentHP / maxHP, currentHP, maxHP);
+        }
+    }
+
+    override public void TakeDamage(int amount)
+    {
+        if (getHitDelegate != null)
+        {
+            getHitDelegate(amount);
+            HPChanged();
+        }
+
+        // 캐릭터 사망
+        if (!isInvincible && currentHP == 0)
+        {
+            if (dieDelegate != null) dieDelegate();
+        }
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            // 테스트용 데미지
+            TakeDamage(-10);
+        }
+    }
+
+    void GetHit(int amount)
+    {
+        if (!isAlive) return;   // 죽었을 때 피격되지 않는다
+
+        Debug.Log("Player: Ouch!!");
+        AddToHP(amount);
+        animator.SetTrigger("Hit");
+
+        ChangeState(State.Stunned);
+
+        DamageSkinManager.Instance.DisplayDamage(-amount, transform.position + Vector3.up * 1.5f);
+    }
+
+    void Die()
+    {
+        if (!isAlive) return;   // 두 번 죽지 않는다
+
+        isAlive = false;
+        StopAllCoroutines();
+        animator.SetTrigger("Die");
+        //GetComponentInChildren<BoxCollider>().enabled = false;
+    }
+
+    IEnumerator Stunned()
+    {
+        // 플레이어 피격 시 잠시 아무것도 못 한다
+        Debug.Log("Stunned");
+        yield return new WaitForSeconds(.8f);
+        ChangeState(State.Idle);
     }
 
     void ChangeState(State nextState)
     {
+        if (currentState == State.Stunned)
+        {
+            if (nextState != State.Idle && nextState != State.Stunned) return;
+        }
+
         stateChanged = true;
         currentState = nextState;
     }
@@ -47,12 +127,6 @@ public class Player : Character
         }
     }
 
-    //bool rotating;
-    //IEnumerator RotateTowards()
-    //{
-    //
-    //}
-
     void RotateModelTowardsDir(float t)
     {
         modelTransform.LookAt(modelTransform.position + dir);
@@ -60,7 +134,7 @@ public class Player : Character
 
     IEnumerator Idle()
     {
-        //Debug.Log("Idle");
+        Debug.Log("Idle");
         stateChanged = false;
 
         while (!stateChanged)
@@ -81,7 +155,7 @@ public class Player : Character
 
     IEnumerator Run()
     {
-        //Debug.Log("Run");
+        Debug.Log("Run");
         animator.SetBool("Running", true);
         stateChanged = false;
         float cnt = 0f;
@@ -111,18 +185,19 @@ public class Player : Character
 
     IEnumerator Attack()
     {
-        //Debug.Log("Attack");
+        Debug.Log("Attack");
         animator.Play("Attack");
         animator.SetBool("Attacking", true);
 
         bool attacking = true;
+        stateChanged = false;
 
         float delta = 0f;
 
         playerAttacks[0].gameObject.SetActive(true);
         playerAttacks[0].AttackStart();
 
-        while (attacking)
+        while (!stateChanged && attacking)
         {
             yield return null;
 
@@ -148,13 +223,16 @@ public class Player : Character
 
         playerAttacks[0].gameObject.SetActive(false);
 
-        if (ControlManager.Instance.GetPlayerMoveKeyDown(out dir))
+        if(!stateChanged)
         {
-            ChangeState(State.Run);
-        }
-        else
-        {
-            ChangeState(State.Idle);
+            if (ControlManager.Instance.GetPlayerMoveKeyDown(out dir))
+            {
+                ChangeState(State.Run);
+            }
+            else
+            {
+                ChangeState(State.Idle);
+            }
         }
 
         animator.SetBool("Attacking", false);
