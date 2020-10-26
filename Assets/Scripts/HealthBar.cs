@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +13,8 @@ public class HealthBar : MonoBehaviour
     Text[] myTexts;
     Slider mySlider;
     Transform healthBarPositionTransform;
+
+    public Image fillImage;
 
     private void Awake()
     {
@@ -31,6 +34,12 @@ public class HealthBar : MonoBehaviour
     public void HealthDisplay(float ratio)
     {
         mySlider.value = ratio;
+
+        // hp 바의 피통 부분을 없앤다
+        if(mySlider.value <= float.Epsilon)
+        {
+            fillImage.enabled = false;
+        }
     }
 
     public void Init(string name, int maxHP)
