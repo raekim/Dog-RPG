@@ -30,8 +30,6 @@ public class WordDisplay : MonoBehaviour
             {
                 TMP.text += c;
                 yield return new WaitForSeconds(speed);
-
-                
             }
             yield return null;
         }
