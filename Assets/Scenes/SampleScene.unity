@@ -2359,7 +2359,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1157878207}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1375457390}
+        m_MethodName: BuyRequest
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1157878207
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2835,6 +2846,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ItemDescription: {fileID: 62357729}
   BuyUI: {fileID: 1375457388}
+  potionManager: {fileID: 1886988818}
 --- !u!1 &1342023497
 GameObject:
   m_ObjectHideFlags: 0
@@ -2991,7 +3003,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d3543a9d633c544fb9fbc8316be05d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GoldNeededText: {fileID: 953623571}
+  AmountText: {fileID: 1236061980}
+  TotalText: {fileID: 1638994505}
   myPotionShop: {fileID: 1321739594}
+  itemPrice: 5
 --- !u!1 &1375990418
 GameObject:
   m_ObjectHideFlags: 0
@@ -3072,7 +3088,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1375990421}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1375457390}
+        m_MethodName: IncreaseBuyAmount
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1375990421
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4419,7 +4446,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1860585021}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1375457390}
+        m_MethodName: DecreaseBuyAmount
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1860585021
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4489,7 +4527,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e30ed13dc79c54d4a88ad2968d5a152d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startGoldAmount: 500
+  startGoldAmount: 10
   goldText: {fileID: 1981853438}
   GoldPrefab: {fileID: 5252321651358331161, guid: b94957a82297d9f4fb2fd0b15e66e8fc,
     type: 3}

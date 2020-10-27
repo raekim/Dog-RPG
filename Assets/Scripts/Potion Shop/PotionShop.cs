@@ -10,10 +10,16 @@ public class PotionShop : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     bool mouseOver;
     public GameObject ItemDescription;
     public GameObject BuyUI;
+    public PotionManager potionManager;
 
     public void UnFreezeShop()
     {
         freeze = false;
+    }
+
+    public void BuyItem(int amount)
+    {
+        potionManager.AddToPotionNum(amount);
     }
 
     public void OnPointerClick(PointerEventData eventData)

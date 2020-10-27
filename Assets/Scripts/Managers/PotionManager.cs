@@ -13,9 +13,15 @@ public class PotionManager : MonoBehaviour
     void Start()
     {
         potionNum = startPotionNum;
-        potionUI.DisplayPotion(potionNum);
+        OnPotionNumChange();
 
         potionUI.potionUseDelegate += UsePotion;
+    }
+
+    public void AddToPotionNum(int amount)
+    {
+        potionNum += amount;
+        OnPotionNumChange();
     }
 
     bool UsePotion()
@@ -23,11 +29,16 @@ public class PotionManager : MonoBehaviour
         if (potionNum <= 0) return false;
 
         potionNum--;
-        potionUI.DisplayPotion(potionNum);
+        OnPotionNumChange();
 
         // 플레이어 회복
         playerCharacter.AddToHP(50);
 
         return true;
+    }
+
+    void OnPotionNumChange()
+    {
+        potionUI.DisplayPotion(potionNum);
     }
 }

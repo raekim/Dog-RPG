@@ -27,6 +27,11 @@ public class GoldManager : MonoBehaviour
         }
     }
 
+    public int GetGoldAmount()
+    {
+        return goldAmount;
+    }
+
     private void Start()
     {
         goldAmount = startGoldAmount;
