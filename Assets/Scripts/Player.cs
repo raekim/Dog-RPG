@@ -9,7 +9,7 @@ public class Player : Character
     public Attack[] playerAttacks;
 
     public PlayerHealthBar HPBar;
-    public int maxHP;
+    public int playerMaxHP;
 
     Vector3 dir;
 
@@ -38,6 +38,7 @@ public class Player : Character
     {
         currentState = State.Idle;
 
+        maxHP = playerMaxHP;
         // 캐릭터 체력 초기화
         SetMaxHP(maxHP);
         FillUpHPToMax();

@@ -32,10 +32,11 @@ public class Character : MonoBehaviour
         HPChanged();
     }
 
-    protected void AddToHP(int amount)
+    public void AddToHP(int amount)
     {
         currentHP += amount;
         currentHP = Mathf.Clamp(currentHP, 0, maxHP);
+        HPChanged();
     }
 
     virtual protected void HPChanged()

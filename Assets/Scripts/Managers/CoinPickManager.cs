@@ -63,7 +63,7 @@ public class CoinPickManager : MonoBehaviour
     {
         var rectTrans = coinImage.GetComponent<RectTransform>();
 
-        Debug.Log(Vector2.Distance(rectTrans.anchoredPosition, goalUIAnchoredPosition));
+        //Debug.Log(Vector2.Distance(rectTrans.anchoredPosition, goalUIAnchoredPosition));
 
         Vector2 vel = (goalUIAnchoredPosition - rectTrans.anchoredPosition).normalized * 10f;
         vel += Random.insideUnitCircle * 200f;
