@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class Coin : MonoBehaviour
 {
+    bool isCoinPiecked;
+
     // Start is called before the first frame update
     void Start()
     {
+        isCoinPiecked = false;
         transform.Rotate(0f, Random.Range(0f, 360f), 0f, Space.World);
     }
 
@@ -20,8 +23,9 @@ public class Coin : MonoBehaviour
     private void OnTriggerStay(Collider other)
     {
         // 코인을 먹는다
-        if(Vector3.Distance(other.gameObject.transform.position, transform.position) < 1f)
+        if(!isCoinPiecked && Vector3.Distance(other.gameObject.transform.position, transform.position) < 1f)
         {
+            isCoinPiecked = true;
             Destroy(gameObject);
             CoinPickManager.Instance.CoinPick(transform.position);
         }

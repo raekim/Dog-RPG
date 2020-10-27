@@ -9,6 +9,7 @@ public class GoldManager : MonoBehaviour
 
     public static GoldManager Instance => instance;
 
+    public int startGoldAmount;
     int goldAmount;
     public TMP_Text goldText;
     public GameObject GoldPrefab;
@@ -28,7 +29,7 @@ public class GoldManager : MonoBehaviour
 
     private void Start()
     {
-        goldAmount = 0;
+        goldAmount = startGoldAmount;
         goldText.text = goldAmount.ToString();
     }
 

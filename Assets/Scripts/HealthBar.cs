@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class HealthBar : MonoBehaviour
 {
-    float transparencyConstant = 50f;
+    float transparencyConstant = 20f;
     [Range(0f, .7f)] public float transparency;
     Image[] myImages;
     Text[] myTexts;
@@ -67,7 +67,7 @@ public class HealthBar : MonoBehaviour
         transform.position = pos;
 
         float dist = Vector3.Distance(Camera.main.transform.position, healthBarPositionTransform.position);
-        if (dist <= 5f) dist = 0f;
+        if (dist <= 15f) dist = 0f;
         ChangeTransparency((transparencyConstant - dist) / transparencyConstant);
     }
 
