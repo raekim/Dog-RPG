@@ -7,7 +7,9 @@ using UnityEngine.EventSystems;
 
 public class TalkBoard : MonoBehaviour, IPointerClickHandler
 {
-    public Talk myTalk;
+    public delegate void TalkFinishDelegate();
+    public TalkFinishDelegate talkFinishDelegate;
+
     [TextArea] public string talkContent;  // 대화 내용
     public Text displayText;
 
@@ -59,7 +61,7 @@ public class TalkBoard : MonoBehaviour, IPointerClickHandler
             if (index >= talkStrings.Length)
             {
                 // 대화 종료
-                myTalk.TalkFinished();
+                talkFinishDelegate();
                 return;
             }
 

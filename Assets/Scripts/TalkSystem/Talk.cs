@@ -7,6 +7,8 @@ using TMPro;
 
 public class Talk : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
+    public GameObject OtherUI;
+
     public GameObject talkBubble;
     public GameObject talkBoard;
     public Transform bubbleTransform;
@@ -30,6 +32,16 @@ public class Talk : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
         boardImage = talkBoard.GetComponent<Image>();
         bubbleText = talkBubble.GetComponentInChildren<TMP_Text>();
         boardText = talkBoard.GetComponentInChildren<Text>();
+    }
+
+    private void Start()
+    {
+        if(OtherUI != null)
+        {
+            OtherUI.GetComponent<PotionShop>().shopCloseDelegate += OtherUIFinished;
+        }
+
+        talkBoard.GetComponent<TalkBoard>().talkFinishDelegate += TalkFinished;
     }
 
     private void OnEnable()
@@ -95,12 +107,30 @@ public class Talk : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
 
     public void TalkFinished()
     {
-        // 대화 끝
-        talkBubble.SetActive(true);
         talkBoard.SetActive(false);
-        talkingOn = false;
 
+        if (OtherUI != null)
+        {
+            // 다른 UI를 등장시킨다
+            OtherUI.SetActive(true);
+        }
+        else
+        {
+            ResetTalkBubble();
+        }
+    }
+
+    void ResetTalkBubble()
+    {
+        // 대화나 다른 UI와의 상호작용을 모두 마치고 처음 상태의 UI로 되돌린다
+        talkBubble.SetActive(true);
+        talkingOn = false;
         ControlManager.Instance.isInteractingWithUI = false;
+    }
+
+    public void OtherUIFinished()
+    {
+        ResetTalkBubble();
     }
 
     void ChangeTransparency(float amount)
