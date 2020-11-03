@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Player : Character
 {
+    public Transform revivePoint;
     public Transform modelTransform;
     public float moveSpeed = .1f;
     public Attack[] playerAttacks;
@@ -36,21 +37,38 @@ public class Player : Character
     // Start is called before the first frame update
     void Start()
     {
+        SetMaxHP(playerMaxHP); // 캐릭터 체력 초기화
+        Revive();
+    }
+
+    void Revive()
+    {
+        StopAllCoroutines();
+
+        // Idle 상태로 변황
+        animator.Play("Idle");
         currentState = State.Idle;
 
-        maxHP = playerMaxHP;
-        // 캐릭터 체력 초기화
-        SetMaxHP(maxHP);
+        // HP를 최대치까지 회복
         FillUpHPToMax();
         isAlive = true;
 
+        // 부활 장소로 이동
+        transform.position = revivePoint.position;
+
         StartCoroutine(FSM());
+    }
+
+    public bool IsAlive()
+    {
+        return isAlive;
     }
 
     override protected void HPChanged()
     {
         if (HPBar != null)
         {
+            Debug.Log("HP ratio : " + (float)currentHP / maxHP);
             HPBar.HealthDisplay((float)currentHP / maxHP, currentHP, maxHP);
         }
     }
@@ -99,7 +117,24 @@ public class Player : Character
         isAlive = false;
         StopAllCoroutines();
         animator.SetTrigger("Die");
-        //GetComponentInChildren<BoxCollider>().enabled = false;
+
+        StartCoroutine(ReviveCount());
+    }
+
+    IEnumerator ReviveCount()
+    {
+        NoticeManager.Instance.SetNoticeActive(true);
+
+        // 5초 후 부활
+        for (int i = 5; i >= 1; --i)
+        {
+            NoticeManager.Instance.WriteToNotice(i.ToString() + "초 후 부활합니다...");
+            yield return new WaitForSeconds(1f);
+        }
+
+        NoticeManager.Instance.SetNoticeActive(false);
+
+        Revive();
     }
 
     IEnumerator Stunned()
@@ -145,6 +180,7 @@ public class Player : Character
 
             if (ControlManager.Instance.GetPlayerMoveKeyDown(out dir))
             {
+                Debug.Log(dir);
                 ChangeState(State.Run);
             }
 

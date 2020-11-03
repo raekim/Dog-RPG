@@ -30,6 +30,10 @@ public class PlayerHealthBar : MonoBehaviour
         {
             fillImage.enabled = false;
         }
+        else
+        {
+            fillImage.enabled = true;
+        }
 
         // 문자열로 hp 표시
         healthText.text = currHP.ToString() + "/" + maxHP.ToString();

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Chesty : Monster
 {
+    Player player;
+
     Transform playerTransform;
     public float moveSpeed;
     public float attackRange;
@@ -38,6 +40,8 @@ public class Chesty : Monster
     {
         HPBar.Init("체스티", 30);
         HPBar.gameObject.SetActive(true);
+
+        player = GameObject.Find("Player").GetComponent<Player>();
     }
 
     private void OnEnable()
@@ -128,6 +132,9 @@ public class Chesty : Monster
         Vector3 dir = Random.insideUnitSphere;
         dir.y = 0f;
 
+        // 걸어 갈 방향을 바라본다
+        transform.LookAt(transform.position + dir);
+
         float delta = 0f;
         float walkingTime = Random.Range(2f, 4f);
         stateChanged = false;
@@ -154,7 +161,7 @@ public class Chesty : Monster
 
         float idlingDelta = 0f;
 
-        while (!stateChanged)
+        while (player.IsAlive() && !stateChanged)
         {
             yield return null;
 
@@ -187,6 +194,7 @@ public class Chesty : Monster
         }
 
         animator.SetBool("Battle", false);
+        if(!player.IsAlive()) ChangeState(State.Walking);
     }
 
     IEnumerator FollowPlayer()
@@ -198,12 +206,13 @@ public class Chesty : Monster
         {
             yield return null;
 
-            // 플레이어를 따라다님
+            // 플레이어를 따라 다님
             transform.LookAt(playerTransform.position);
             transform.Translate(transform.forward * moveSpeed * Time.deltaTime, Space.World);
             
             float dist = Vector3.Distance(transform.position, playerTransform.position);
             following = dist < followRange && attackRange < dist;
+            following &= player.IsAlive();  //  플레이어가 살아있어야 따라 감
         }
 
         animator.SetBool("Follow Player", false);
@@ -215,7 +224,7 @@ public class Chesty : Monster
         // 플레이어 공격
         bool attacking = true;
 
-        while (attacking)
+        while (player.IsAlive() && attacking)
         {
             yield return null;
 
@@ -227,10 +236,12 @@ public class Chesty : Monster
 
     void OnPlayerDetect(GameObject playerObject)
     {
+        if (!player.IsAlive()) return;  // 플레이어가 죽어있다면 아무 반응 안 함
+
         playerTransform = playerObject.transform;
 
         // Sleep 도중에 플레이어가 가까이 접근하면 깨어난다
-        if(currentState == State.Sleep)
+        if (currentState == State.Sleep)
         {
             ChangeState(State.Battle);
             animator.SetTrigger("Awake");
@@ -244,7 +255,7 @@ public class Chesty : Monster
 
     public void ChestyAttack()
     {
-        Debug.Log(Vector3.Distance(playerTransform.position, transform.position));
+        //Debug.Log(Vector3.Distance(playerTransform.position, transform.position));
 
         if(Vector3.Distance(playerTransform.position, transform.position) < 2.1f)
         {
