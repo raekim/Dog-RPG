@@ -12,6 +12,7 @@ public class MonsterSpawner : MonoBehaviour
     public bool spawnerRunning;
 
     public int curMonsterCount;
+    [HideInInspector]
     public float deltaTotal;
     public float waveDelaySeconds;    // waveDelaySeconds 초 마다 체크해서 몬스터가 maxMonsterCount 에서 모자라는 수 만큼 코루틴으로 스폰한다
     public float spawnDelaySeconds;   // 개별 몬스터 스폰 딜레이

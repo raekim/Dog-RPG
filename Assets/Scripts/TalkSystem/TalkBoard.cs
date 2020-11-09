@@ -76,6 +76,7 @@ public class TalkBoard : MonoBehaviour, IPointerClickHandler
             }
             index++;
 
+            // 대사 실시간 타이핑 효과
             StartCoroutine(TextDislayEffect());
         }
     }

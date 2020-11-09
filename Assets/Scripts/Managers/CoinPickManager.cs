@@ -63,21 +63,24 @@ public class CoinPickManager : MonoBehaviour
     {
         var rectTrans = coinImage.GetComponent<RectTransform>();
 
-        //Debug.Log(Vector2.Distance(rectTrans.anchoredPosition, goalUIAnchoredPosition));
-
+        // vel : 코인 이미지가 랜덤한 방향으로 움직이게 하는 가속도
         Vector2 vel = (goalUIAnchoredPosition - rectTrans.anchoredPosition).normalized * 10f;
         vel += Random.insideUnitCircle * 200f;
 
+        // 코인 이미지가 UI에 충분히 가까워 질 때 까지 이미지를 UI 방향으로 움직인다
         while (Vector2.Distance(rectTrans.anchoredPosition, goalUIAnchoredPosition) > 40f)
         {
             yield return null;
             rectTrans.anchoredPosition += vel * Time.deltaTime;
 
+            // vel2 : 코인 이미지가 UI 방향으로 움직이게 하는 가속도
             Vector2 vel2 = (goalUIAnchoredPosition - rectTrans.anchoredPosition).normalized * 500f;
         
+            // vel과 vel2 사이를 선형보간을 사용하여 적절한 가속도를 구해 이미지를 움직이는데 사용한다
             vel = Vector2.Lerp(vel, vel2, Time.deltaTime);
         }
 
+        // 코인 이미지를 삭제하고, 보유 코인 수를 하나 늘린다
         Destroy(coinImage.gameObject);
         GoldManager.Instance.AddGold(1);
     }
